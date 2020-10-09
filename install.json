@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json.schemastore.org/install",
+  "resources": {
+    "body": [
+      {
+        "type": "script",
+        "src": "./src/index.js"
+      }
+    ]
+  },
+  "hooks": [
+    {
+      "endpoint": "https://notify.mgid.com/cf-apps",
+      "events": [
+        "new-install",
+        "update-install",
+        "delete-install"
+      ]
+    },
+    {
+      "events": [
+        "option-change:account",
+        "oauth-login"
+      ],
+      "block": true,
+      "type": "object",
+      "authenticate": [
+        "account"
+      ],
+      "failure": {
+        "action": "notify",
+        "message": "There was an error communicating with MGID."
+      }
+    }
+  ],
+  "preview": {
+    "hide": true,
+    "handlers": [
+      {
+        "options": [
+          "_default"
+        ],
+        "execute": "INSTALL_SCOPE.setOptions(INSTALL_OPTIONS)"
+      }
+    ]
+  },
+  "options": {
+    "properties": {
+      "account": {
+        "title": "MGID Account",
+        "type": "object",
+        "format": "account",
+        "services": [
+          "mgid"
+        ],
+        "required": true,
+        "order": 1
+      }
+    }
+  }
+}
